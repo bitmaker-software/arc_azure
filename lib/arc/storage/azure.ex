@@ -3,7 +3,12 @@ defmodule Arc.Storage.Azure do
 
   def put(definition, version, {file, scope}) do
     destination_dir = definition.storage_dir(version, {file, scope})
-    case upload_file(destination_dir, file) do
+
+    options =
+      definition.s3_object_headers(version, {file, scope})
+      |> ensure_keyword_list()
+
+    case upload_file(destination_dir, file, options) do
       {:ok, _conn} -> {:ok, file.file_name}
       {:error, conn} -> {:error, conn}
     end
@@ -64,12 +69,14 @@ defmodule Arc.Storage.Azure do
     server_object
   end
 
-  defp upload_file(destination_dir, file) do
+  defp upload_file(destination_dir, file, options \\ []) do
     filename = Path.join(destination_dir, file.file_name)
-    ExAzure.request(:put_block_blob, [container(), filename, get_binary_file(file)])
+    ExAzure.request(:put_block_blob, [container(), filename, get_binary_file(file), options])
   end
 
   defp get_binary_file(%{path: nil} = file), do: file.binary
   defp get_binary_file(%{path: _} = file), do: File.read!(file.path)
 
+  defp ensure_keyword_list(list) when is_list(list), do: list
+  defp ensure_keyword_list(map) when is_map(map), do: Map.to_list(map)
 end
