@@ -4,7 +4,7 @@ defmodule ArcAzure.MixProject do
   def project do
     [
       app: :arc_azure,
-      version: "0.1.1",
+      version: "0.1.2",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -20,10 +20,12 @@ defmodule ArcAzure.MixProject do
   end
 
   defp package do
-    [maintainers: ["Phil"],
-     licenses: ["Apache 2.0"],
-     links: %{"GitHub" => "https://github.com/phil-a/arc_azure"},
-     files: ~w(mix.exs README.md lib)]
+    [
+      maintainers: ["Bitmaker"],
+      licenses: ["Apache 2.0"],
+      links: %{"GitHub" => "https://github.com/bitmaker-software/arc_azure"},
+      files: ~w(mix.exs README.md lib)
+    ]
   end
 
   # Run "mix help compile.app" to learn about applications.
